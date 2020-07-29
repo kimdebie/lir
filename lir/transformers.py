@@ -1,49 +1,18 @@
 import numpy as np
-import scipy
 import sklearn
 
 
-class VectorNormalizer(sklearn.base.TransformerMixin):
+class SumNormalizer(sklearn.base.TransformerMixin):
     """
-    Normalize samples individually to a sum of 1.
+    Normalize samples individually to unit sum.
 
-    See also: sklearn.preprocessing.Normalizer
+    See also: sklearn.preprocessing.Normalizer which normalizes to unit norm
     """
     def fit(self, X, y=None):
         return self
 
     def transform(self, X):
         return (X.T / np.sum(X, axis=1)).T
-
-
-class GaussianCdfTransformer(sklearn.base.TransformerMixin):
-    """
-    TODO: may already exist; see sklearn.preprocessing.QuantileTransformer
-
-    Takes an array of samples and returns the element-wise order of the sample using a cumulative density function.
-
-    Steps for each feature:
-    1. fit a density function from the mean and standard deviation for the whole population, assuming a gaussian distribution;
-    2. delete the feature if there is too little data to calculate a standard deviation greater than 0;
-    3. replace individual values by the value returned by the cumulative density function
-
-    For example, if a feature value is 10, and this is exactly the mean of this feature in the population, the feature value will be replaced by .5.
-    """
-
-    def fit(self, X, y=None):
-        self._mean = np.mean(X, axis=0)
-        self._std = np.std(X, axis=0)
-
-        self._valid_features = self._std > 0
-        self._mean = self._mean[self._valid_features]
-        self._std = self._std[self._valid_features]
-
-        return self
-
-    def transform(self, X):
-        assert len(X.shape) == 2
-        X = X[:,self._valid_features]
-        return scipy.stats.norm.cdf(X, self._mean, self._std)
 
 
 class AbsDiffTransformer(sklearn.base.TransformerMixin):
