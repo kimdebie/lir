@@ -4,6 +4,11 @@ import sklearn
 
 
 class VectorNormalizer(sklearn.base.TransformerMixin):
+    """
+    Normalize samples individually to a sum of 1.
+
+    See also: sklearn.preprocessing.Normalizer
+    """
     def fit(self, X, y=None):
         return self
 
@@ -13,6 +18,8 @@ class VectorNormalizer(sklearn.base.TransformerMixin):
 
 class GaussianCdfTransformer(sklearn.base.TransformerMixin):
     """
+    TODO: may already exist; see sklearn.preprocessing.QuantileTransformer
+
     Takes an array of samples and returns the element-wise order of the sample using a cumulative density function.
 
     Steps for each feature:
